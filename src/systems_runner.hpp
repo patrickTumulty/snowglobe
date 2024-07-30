@@ -10,14 +10,14 @@
 class SystemsRunner
 {
   public:
-    SystemsRunner(double frequencyHz);
+    SystemsRunner();
     ~SystemsRunner();
 
     void start();
 
     void stop();
 
-    void addSystem(std::shared_ptr<System> system);
+    void addSystem(std::unique_ptr<System> system);
 
     void setFrequencyHz(double frequencyHz);
 
@@ -27,7 +27,7 @@ class SystemsRunner
 
     void runSystemsLoop();
 
-    std::vector<std::shared_ptr<System>> systems;
+    std::vector<std::unique_ptr<System>> systems;
 
     double frequencyHz;
 

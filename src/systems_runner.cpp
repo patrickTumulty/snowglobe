@@ -1,10 +1,9 @@
 
 #include "systems_runner.hpp"
 #include <chrono>
-#include <ratio>
 #include <thread>
 
-SystemsRunner::SystemsRunner(double frequencyHz) : frequencyHz(frequencyHz), isRunning(false)
+SystemsRunner::SystemsRunner() : frequencyHz(10), isRunning(false)
 {
 }
 
@@ -25,7 +24,7 @@ void SystemsRunner::runSystemsLoop()
     while (isRunning)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        for (auto sys : systems)
+        for (auto& sys : systems)
         {
             sys->update();
         }
@@ -46,9 +45,9 @@ void SystemsRunner::stop()
     }
 }
 
-void SystemsRunner::addSystem(std::shared_ptr<System> system)
+void SystemsRunner::addSystem(std::unique_ptr<System> system)
 {
-    systems.push_back(system);
+    // systems.push_back(system);
 }
 
 void SystemsRunner::setFrequencyHz(double frequencyHz)

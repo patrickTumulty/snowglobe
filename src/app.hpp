@@ -12,25 +12,29 @@ class AppBuilder;
 class App
 {
 public:
-    static AppBuilder builder();
-
-private:
-    SystemsRunner systemManager;
-
     App();
 
-public:
-    class AppBuilder
-    {
-    public:
-        AppBuilder();
+    static AppBuilder builder();
 
-        AppBuilder addSystem(std::unique_ptr<System> system);
+    SystemsRunner& getSystemsRunner();
 
-        App build();
 
-    private:
-    };
+
+private:
+    SystemsRunner systemRunner;
+
 };
 
+class AppBuilder
+{
+public:
+    AppBuilder();
+
+    AppBuilder &addSystem(std::unique_ptr<System> system);
+
+    std::unique_ptr<App> build();
+
+private:
+    std::unique_ptr<App> app;
+};
 #endif

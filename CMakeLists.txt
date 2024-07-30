@@ -7,7 +7,9 @@ set(CMAKE_CXX_COMPILER clang++)
 
 project(snowglobe LANGUAGES CXX)
 
-add_subdirectory(libs/sglogger)
+if(NOT TARGET spdlog)
+    find_package(spdlog REQUIRED)
+endif()
 
 file(GLOB SOURCE_FILES src/*.cpp)
 
@@ -15,4 +17,4 @@ include_directories(src)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC sglogger)
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
