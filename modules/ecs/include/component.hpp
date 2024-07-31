@@ -8,6 +8,7 @@ class Component
 {
   public:
     virtual ~Component() = default;
+
     virtual void setEntityUid(uint32_t entityUid);
 
     uint32_t getEntityUid();

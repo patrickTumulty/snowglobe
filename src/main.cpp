@@ -64,6 +64,8 @@ int main()
 {
     initLogging("logs/snowglobe.log");
 
+    printf("Hello, World\n");
+
     EntityManager entityManager;
 
     entityManager.newEntity({
@@ -92,9 +94,25 @@ int main()
         printf("%s %d: id=%d\n", e->name.c_str(), e->value, e->getEntityUid());
     }
 
-    s_ptr<ComponentA> ca = std::make_shared<ComponentA>(1, "A");
-    s_ptr<ComponentB> cb = std::make_shared<ComponentB>(2, "B");
+    auto entities2 = entityManager.queryEntities<ComponentC, ComponentB>();
+    for (auto [compA, compB] : entities2)
+    {
+        printf("A name=%s value=%d, B name=%s value=%d\n",
+               compA->name.c_str(),
+               compA->value, 
+               compB->name.c_str(),
+               compB->value);
+    }
 
-    printf("%zu %zu\n", typeid(ca).hash_code(), typeid(cb).hash_code());
-
+    auto entities3 = entityManager.queryEntities<ComponentA, ComponentB, ComponentC>();
+    for (auto [compA, compB, compC] : entities3)
+    {
+        printf("A name=%s value=%d, B name=%s value=%d, C name=%s value=%d\n",
+               compA->name.c_str(),
+               compA->value, 
+               compB->name.c_str(),
+               compB->value,
+               compC->name.c_str(),
+               compC->value);
+    }
 }
