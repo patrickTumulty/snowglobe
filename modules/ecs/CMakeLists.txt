@@ -32,6 +32,7 @@ enable_testing()
 set(
     ECS_TEST_SOURCES
     tests/entity_manager_tests.cpp
+    tests/entity_tests.cpp
 )
 
 add_executable(${PROJECT_NAME}_test ${ECS_TEST_SOURCES})

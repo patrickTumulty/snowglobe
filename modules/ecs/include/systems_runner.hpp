@@ -9,7 +9,7 @@
 
 class SystemsRunner
 {
-  public:
+public:
     SystemsRunner();
     ~SystemsRunner();
 
@@ -23,8 +23,7 @@ class SystemsRunner
 
     double getFrequencyHz();
 
-  private:
-
+private:
     void runSystemsLoop();
 
     std::vector<std::unique_ptr<System>> systems;

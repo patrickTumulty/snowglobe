@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include <optional>
 
 class EntityManager
 {
@@ -19,7 +20,8 @@ public:
 
     void removeEntity(uint32_t entityUid);
 
-    template<typename T> std::vector<std::shared_ptr<T>> queryEntities()
+    template<typename T>
+    std::vector<std::shared_ptr<T>> queryEntities()
     {
         std::vector<std::shared_ptr<T>> collection;
         for (auto entity : entities)
@@ -35,7 +37,8 @@ public:
         return collection;
     }
 
-    template<typename T, typename V> std::vector<std::tuple<std::shared_ptr<T>, std::shared_ptr<V>>> queryEntities()
+    template<typename T, typename V>
+    std::vector<std::tuple<std::shared_ptr<T>, std::shared_ptr<V>>> queryEntities()
     {
         std::vector<std::tuple<std::shared_ptr<T>, std::shared_ptr<V>>> collection;
         for (auto entity : entities)
@@ -57,7 +60,8 @@ public:
         return collection;
     }
 
-    template<typename T, typename V, typename K> std::vector<std::tuple<std::shared_ptr<T>, std::shared_ptr<V>, std::shared_ptr<K>>> queryEntities()
+    template<typename T, typename V, typename K>
+    std::vector<std::tuple<std::shared_ptr<T>, std::shared_ptr<V>, std::shared_ptr<K>>> queryEntities()
     {
         std::vector<std::tuple<std::shared_ptr<T>, std::shared_ptr<V>, std::shared_ptr<K>>> collection;
         for (auto entity : entities)
@@ -86,6 +90,8 @@ public:
     }
 
 private:
+    std::optional<std::vector<std::shared_ptr<Entity>>::iterator> findEntity(uint32_t eneityUid);
+
     uint32_t uidCounter = 0;
     std::vector<std::shared_ptr<Entity>> entities;
 };

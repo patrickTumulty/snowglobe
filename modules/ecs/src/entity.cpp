@@ -17,7 +17,7 @@ Entity::Entity(uint32_t uid, std::initializer_list<std::shared_ptr<Component>> c
 
 void Entity::registerComponent(std::shared_ptr<Component> component)
 {
-    auto& c = *component.get();
+    auto &c = *component.get();
     std::type_index index = typeid(c);
     if (!componentsMap.contains(index))
     {
@@ -28,7 +28,7 @@ void Entity::registerComponent(std::shared_ptr<Component> component)
 
 void Entity::unregisterComponent(std::shared_ptr<Component> component)
 {
-    auto& c = *component.get();
+    auto &c = *component.get();
     componentsMap.erase(typeid(c));
 }
 

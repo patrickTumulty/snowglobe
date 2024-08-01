@@ -1,4 +1,3 @@
-
 #include "systems_runner.hpp"
 #include <chrono>
 #include <thread>
@@ -24,7 +23,7 @@ void SystemsRunner::runSystemsLoop()
     while (isRunning)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        for (auto& sys : systems)
+        for (auto &sys : systems)
         {
             sys->update();
         }

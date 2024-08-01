@@ -30,7 +30,8 @@ public:
      *
      * @return true if has component 
      */
-    template<typename T> bool hasComponent()
+    template<typename T>
+    bool hasComponent()
     {
         return componentsMap.contains(typeid(T));
     }
@@ -42,7 +43,8 @@ public:
      *
      * @return component or nullptr
      */
-    template<typename T> std::shared_ptr<T> getComponent()
+    template<typename T>
+    std::shared_ptr<T> getComponent()
     {
         return std::dynamic_pointer_cast<T>(componentsMap[typeid(T)]);
     }
