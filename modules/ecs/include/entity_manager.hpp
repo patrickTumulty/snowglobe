@@ -6,8 +6,9 @@
 #include "entity.hpp"
 #include <cstdint>
 #include <memory>
-#include <vector>
 #include <optional>
+#include <set>
+#include <vector>
 
 class EntityManager
 {
@@ -16,9 +17,22 @@ public:
 
     void newEntity(std::initializer_list<std::shared_ptr<Component>> components);
 
-    void addComponent(uint32_t entityUid, std::shared_ptr<Component> component);
+    void addComponent(uint32_t entityIndex, std::shared_ptr<Component> component);
 
-    void removeEntity(uint32_t entityUid);
+    void removeComponent(uint32_t entityIndex, std::shared_ptr<Component> component);
+
+    void removeEntity(uint32_t entityIndex);
+
+    template<typename T>
+    bool entityHasComponent(uint64_t entityIndex)
+    {
+        auto entityOptional = findEntity(entityIndex);
+        if (entityOptional.has_value())
+        {
+            return entityOptional.value()->hasComponent<T>();
+        }
+        return false;
+    }
 
     template<typename T>
     std::vector<std::shared_ptr<T>> queryEntities()
@@ -90,9 +104,9 @@ public:
     }
 
 private:
-    std::optional<std::vector<std::shared_ptr<Entity>>::iterator> findEntity(uint32_t eneityUid);
+    std::optional<std::shared_ptr<Entity>> findEntity(uint32_t entityIndex);
 
-    uint32_t uidCounter = 0;
+    std::set<uint32_t> availableIndexSet;
     std::vector<std::shared_ptr<Entity>> entities;
 };
 

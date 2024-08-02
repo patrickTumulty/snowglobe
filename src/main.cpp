@@ -4,11 +4,17 @@
 #include <app.hpp>
 #include <cstdio>
 #include <iostream>
+#include <iterator>
+#include <locale>
+#include <map>
 #include <memory>
+#include <ostream>
 #include <sg_logging.hpp>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <strings.h>
 #include <typeindex>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 static std::shared_ptr<spdlog::logger> logger = nullptr;
@@ -32,10 +38,6 @@ class ComponentA : public Component
 public:
     int value;
     std::string name;
-
-    ComponentA(int value, std::string name) : value(value), name(name)
-    {
-    }
 };
 
 class ComponentB : public Component
@@ -43,10 +45,6 @@ class ComponentB : public Component
 public:
     int value;
     std::string name;
-
-    ComponentB(int value, std::string name) : value(value), name(name)
-    {
-    }
 };
 
 class ComponentC : public Component
@@ -54,10 +52,6 @@ class ComponentC : public Component
 public:
     int value;
     std::string name;
-
-    ComponentC(int value, std::string name) : value(value), name(name)
-    {
-    }
 };
 
 int main()
@@ -66,53 +60,6 @@ int main()
 
     printf("Hello, World\n");
 
-    EntityManager entityManager;
 
-    entityManager.newEntity({
-        std::make_shared<ComponentA>(1, "A1"),
-        std::make_shared<ComponentB>(2, "B1"),
-        std::make_shared<ComponentC>(3, "C1"),
-    });
-
-    entityManager.newEntity({
-        std::make_shared<ComponentA>(4, "A2"),
-        std::make_shared<ComponentB>(5, "B2"),
-    });
-
-    entityManager.newEntity({
-        std::make_shared<ComponentA>(6, "A3"),
-    });
-
-    entityManager.newEntity({
-        std::make_shared<ComponentC>(7, "C4"),
-        std::make_shared<ComponentB>(8, "B4"),
-    });
-
-    auto entities = entityManager.queryEntities<ComponentA>();
-    for (auto e : entities)
-    {
-        printf("%s %d: id=%d\n", e->name.c_str(), e->value, e->getEntityUid());
-    }
-
-    auto entities2 = entityManager.queryEntities<ComponentC, ComponentB>();
-    for (auto [compA, compB] : entities2)
-    {
-        printf("A name=%s value=%d, B name=%s value=%d\n",
-               compA->name.c_str(),
-               compA->value, 
-               compB->name.c_str(),
-               compB->value);
-    }
-
-    auto entities3 = entityManager.queryEntities<ComponentA, ComponentB, ComponentC>();
-    for (auto [compA, compB, compC] : entities3)
-    {
-        printf("A name=%s value=%d, B name=%s value=%d, C name=%s value=%d\n",
-               compA->name.c_str(),
-               compA->value, 
-               compB->name.c_str(),
-               compB->value,
-               compC->name.c_str(),
-               compC->value);
-    }
 }
+

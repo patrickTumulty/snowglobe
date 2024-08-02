@@ -2,13 +2,13 @@
 #include "entity.hpp"
 #include <cerrno>
 
-Entity::Entity(uint32_t uid) : Entity(uid, {})
+Entity::Entity(uint32_t index) : Entity(index, {})
 {
 }
 
-Entity::Entity(uint32_t uid, std::initializer_list<std::shared_ptr<Component>> components) : entityUid(uid), componentsMap()
+Entity::Entity(uint32_t index, std::initializer_list<std::shared_ptr<Component>> components) : entityIndex(index), componentsMap()
 {
-    entityUid = uid;
+    entityIndex = index;
     for (auto component : components)
     {
         registerComponent(component);
@@ -18,11 +18,11 @@ Entity::Entity(uint32_t uid, std::initializer_list<std::shared_ptr<Component>> c
 void Entity::registerComponent(std::shared_ptr<Component> component)
 {
     auto &c = *component.get();
-    std::type_index index = typeid(c);
-    if (!componentsMap.contains(index))
+    std::type_index typeIndex = typeid(c);
+    if (!componentsMap.contains(typeIndex))
     {
-        component->setEntityUid(entityUid);
-        componentsMap.insert_or_assign(index, component);
+        component->setEntityIndex(entityIndex);
+        componentsMap.insert_or_assign(typeIndex, component);
     }
 }
 
@@ -33,7 +33,7 @@ void Entity::unregisterComponent(std::shared_ptr<Component> component)
 }
 
 
-uint32_t Entity::getEntityUid()
+uint32_t Entity::getEntityIndex()
 {
-    return entityUid;
+    return entityIndex;
 }

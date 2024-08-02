@@ -1,6 +1,7 @@
 #include "entity_manager.hpp"
 #include "test_components.hpp"
 #include <cstdint>
+#include <cstdio>
 #include <gtest/gtest.h>
 #include <memory>
 
@@ -35,7 +36,7 @@ TEST(EntityManagerTests, QuerySingleComponentsTest)
     std::set<uint32_t> uidSet;
     for (auto components : components)
     {
-        uidSet.insert(components->getEntityUid());
+        uidSet.insert(components->getEntityIndex());
     }
 
     ASSERT_EQ(uidSet.size(), components.size());
@@ -53,8 +54,8 @@ TEST(EntityManagerTests, QueryDoubleComponentsTest)
     std::set<uint32_t> uidSet;
     for (auto [componentA, componentB] : components)
     {
-        ASSERT_EQ(componentA->getEntityUid(), componentB->getEntityUid());
-        uidSet.insert(componentA->getEntityUid());
+        ASSERT_EQ(componentA->getEntityIndex(), componentB->getEntityIndex());
+        uidSet.insert(componentA->getEntityIndex());
     }
 
     ASSERT_EQ(uidSet.size(), components.size());
@@ -72,10 +73,55 @@ TEST(EntityManagerTests, QueryTripleComponentsTest)
     std::set<uint32_t> uidSet;
     for (auto [componentA, componentB, componentC] : components)
     {
-        ASSERT_EQ(componentA->getEntityUid(), componentB->getEntityUid());
-        ASSERT_EQ(componentB->getEntityUid(), componentC->getEntityUid());
-        uidSet.insert(componentA->getEntityUid());
+        ASSERT_EQ(componentA->getEntityIndex(), componentB->getEntityIndex());
+        ASSERT_EQ(componentB->getEntityIndex(), componentC->getEntityIndex());
+        uidSet.insert(componentA->getEntityIndex());
     }
 
     ASSERT_EQ(uidSet.size(), components.size());
+}
+
+TEST(EntityManagerTests, AddComponentTest)
+{
+    EntityManager entityManager;
+
+    addDefaultEntities(entityManager);
+
+    auto components3 = entityManager.queryEntities<ComponentA, ComponentB, ComponentC>();
+    ASSERT_EQ(components3.size(), 2);
+
+    auto components2 = entityManager.queryEntities<ComponentA, ComponentB>();
+    ASSERT_EQ(components2.size(), 4);
+
+    for (auto [componentA, componentB] : components2)
+    {
+        if (!entityManager.entityHasComponent<ComponentC>(componentA->getEntityIndex()))
+        {
+            entityManager.addComponent(componentA->getEntityIndex(), std::make_shared<ComponentC>());
+        }
+    }
+
+    components3 = entityManager.queryEntities<ComponentA, ComponentB, ComponentC>();
+    ASSERT_EQ(components3.size(), 4);
+}
+
+TEST(EntityManagerTests, RemoveComponentTest)
+{
+    EntityManager entityManager;
+
+    addDefaultEntities(entityManager);
+
+    auto components3 = entityManager.queryEntities<ComponentA, ComponentB, ComponentC>();
+    ASSERT_EQ(components3.size(), 2);
+
+    for (auto [componentA, componentB, componentC] : components3)
+    {
+        if (entityManager.entityHasComponent<ComponentC>(componentA->getEntityIndex()))
+        {
+            entityManager.removeComponent(componentA->getEntityIndex(), componentC);
+        }
+    }
+
+    components3 = entityManager.queryEntities<ComponentA, ComponentB, ComponentC>();
+    ASSERT_EQ(components3.size(), 0);
 }

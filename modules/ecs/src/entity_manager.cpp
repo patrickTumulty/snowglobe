@@ -1,41 +1,62 @@
 
 #include "entity_manager.hpp"
 #include "entity.hpp"
-#include <algorithm>
 #include <cstdarg>
+#include <cstdint>
 #include <initializer_list>
 #include <memory>
 #include <optional>
 
 void EntityManager::newEntity(std::initializer_list<std::shared_ptr<Component>> components)
 {
-    std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(uidCounter++, components);
-    entities.push_back(newEntity);
+    uint32_t index = 0;
+    if (!availableIndexSet.empty())
+    {
+        index = *availableIndexSet.begin();
+        availableIndexSet.erase(availableIndexSet.begin());
+    }
+    else
+    {
+        index = entities.size();
+    }
+    std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(index, components);
+    entities.insert(entities.begin() + index, newEntity);
 }
 
-void EntityManager::addComponent(uint32_t entityUid, std::shared_ptr<Component> component)
+void EntityManager::addComponent(uint32_t entityIndex, std::shared_ptr<Component> component)
 {
-    auto entityIter = findEntity(entityUid);
-    if (entityIter.has_value())
+    auto entityOptional = findEntity(entityIndex);
+    if (entityOptional.has_value())
     {
-        (*entityIter.value())->registerComponent(component);
+        entityOptional.value()->registerComponent(component);
     }
 }
 
-void EntityManager::removeEntity(uint32_t entityUid)
+void EntityManager::removeComponent(uint32_t entityIndex, std::shared_ptr<Component> component)
 {
-    auto entityIter = findEntity(entityUid);
-    if (entityIter.has_value())
+    auto entityOptional = findEntity(entityIndex);
+    if (entityOptional.has_value())
     {
-        entities.erase(entityIter.value());
+        entityOptional.value()->unregisterComponent(component);
     }
 }
 
-
-std::optional<std::vector<std::shared_ptr<Entity>>::iterator> EntityManager::findEntity(uint32_t entityUid)
+void EntityManager::removeEntity(uint32_t entityIndex)
 {
-    auto iter = std::find_if(entities.begin(), entities.end(), [entityUid](std::shared_ptr<Entity> entity) {
-        return entity->getEntityUid() == entityUid;
-    });
-    return (iter == entities.end()) ? std::nullopt : std::optional<std::vector<std::shared_ptr<Entity>>::iterator>{iter};
+    auto entityOptional = findEntity(entityIndex);
+    if (entityOptional.has_value())
+    {
+        entities[entityIndex] = nullptr;
+        availableIndexSet.insert(entityIndex);
+    }
+}
+
+std::optional<std::shared_ptr<Entity>> EntityManager::findEntity(uint32_t entityIndex)
+{
+    if (entityIndex >= entities.size())
+    {
+        return std::nullopt;
+    }
+
+    return entities[entityIndex];
 }

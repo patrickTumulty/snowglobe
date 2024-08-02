@@ -1,12 +1,12 @@
 
 #include "component.hpp"
 
-void Component::setEntityUid(uint32_t entityUid)
+void Component::setEntityIndex(uint32_t entityIndex)
 {
-    this->entityUid = entityUid;
+    this->entityIndex = entityIndex;
 }
 
-uint32_t Component::getEntityUid()
+uint32_t Component::getEntityIndex()
 {
-    return entityUid;
+    return entityIndex;
 }

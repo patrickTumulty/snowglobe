@@ -9,12 +9,12 @@ class Component
   public:
     virtual ~Component() = default;
 
-    virtual void setEntityUid(uint32_t entityUid);
+    virtual void setEntityIndex(uint32_t entityUid);
 
-    uint32_t getEntityUid();
+    uint32_t getEntityIndex();
 
   private:
-    uint32_t entityUid;
+    uint32_t entityIndex;
 };
 
 #endif

@@ -11,9 +11,9 @@ TEST(EntityTests, EntityUidTest)
     Entity entity2(2, {std::make_shared<ComponentA>(), std::make_shared<ComponentB>()});
     Entity entity3(3, {std::make_shared<ComponentA>()});
 
-    ASSERT_EQ(entity1.getEntityUid(), 1);
-    ASSERT_EQ(entity2.getEntityUid(), 2);
-    ASSERT_EQ(entity3.getEntityUid(), 3);
+    ASSERT_EQ(entity1.getEntityIndex(), 1);
+    ASSERT_EQ(entity2.getEntityIndex(), 2);
+    ASSERT_EQ(entity3.getEntityIndex(), 3);
 }
 
 TEST(EntityTests, HasComponentTest)
@@ -56,7 +56,7 @@ TEST(EntityTests, GetComponentTest)
     {
         if (components1[i] == nullptr)
             continue;
-        ASSERT_TRUE(components1[i]->getEntityUid() == entity1.getEntityUid());
+        ASSERT_TRUE(components1[i]->getEntityIndex() == entity1.getEntityIndex());
     }
 
     // Entity 2
@@ -74,7 +74,7 @@ TEST(EntityTests, GetComponentTest)
     {
         if (components2[i] == nullptr)
             continue;
-        ASSERT_TRUE(components2[i]->getEntityUid() == entity2.getEntityUid());
+        ASSERT_TRUE(components2[i]->getEntityIndex() == entity2.getEntityIndex());
     }
 
     // Entity 3
@@ -92,7 +92,7 @@ TEST(EntityTests, GetComponentTest)
     {
         if (components3[i] == nullptr)
             continue;
-        ASSERT_TRUE(components3[i]->getEntityUid() == entity3.getEntityUid());
+        ASSERT_TRUE(components3[i]->getEntityIndex() == entity3.getEntityIndex());
     }
 }
 
